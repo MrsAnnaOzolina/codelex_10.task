@@ -2,8 +2,15 @@ import axios from 'axios';
 import { EvalSourceMapDevToolPlugin } from 'webpack';
 
 let loadMoreButton = document.querySelector<HTMLButtonElement>(".loadButton");
+let allCountryData = document.querySelector<HTMLTableElement>(".tableBody");
+let maxDataLoaded: number = 20;
+//let nextPage: number = 1; 
+let url = "http://localhost:3004/countries";
 
-
+//test 
+// axios.get("http://localhost:3004/countries?_limit=20&_sort=name&_order=desc").then((dataTable)=>{
+//     console.log(dataTable)
+// })
 
 type Countries = {
     name: string,
@@ -24,13 +31,11 @@ type Countries = {
     isoCode: string
 }
 
-let allCountryData = document.querySelector<HTMLTableElement>(".tableBody");
-//let nextPage: number = 1; 
-let maxDataLoaded: number = 20;
 loadData(maxDataLoaded);
+
 // loadMoreData(maxDataLoaded);
 function loadData(maxDataLoaded: number) {
-    axios.get<Countries[]>(`http://localhost:3004/countries`)
+    axios.get<Countries[]>(url)
         .then((data) => {
             for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
                 allCountryData.innerHTML +=
@@ -53,10 +58,7 @@ loadMoreButton.addEventListener("click", () => {
         loadData(maxDataLoaded);
     }
 })
-sortData();
-function sortData() {
 
-}
 
 // inout search country
 const countryInput = document.querySelector<HTMLInputElement | null>(".countryinput");
@@ -210,3 +212,41 @@ clearButton.addEventListener("click", () => {
     languageinput.value = "";
     location.reload();
 })
+
+
+const sortButtonsDown = document.querySelectorAll(".arrowDown");
+const sortButtonsUp = document.querySelectorAll(".arrowUp");
+sortButtonsDown[0].addEventListener("click", () => {
+    allCountryData.innerHTML = " "
+    axios.get<Countries[]>('http://localhost:3004/countries?_sort=name&_order=desc')
+        .then((data) => {
+            url = "http://localhost:3004/countries?_sort=name&_order=desc"
+            for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
+                allCountryData.innerHTML +=
+                    `<tr>
+<th> ${data.data[i].name}</th>
+<th>${data.data[i].capital}</th>
+<th>${data.data[i].currency.code}</th>
+<th>${data.data[i].language.name}</th>
+</tr>`;
+            }
+        }).catch((error) => { console.log(error); })
+})
+sortButtonsUp[0].addEventListener("click", () => {
+    allCountryData.innerHTML = " "
+    axios.get<Countries[]>('http://localhost:3004/countries?_sort=name&_order=asc')
+        .then((data) => {
+            url = "http://localhost:3004/countries?_sort=name&_order=asc"
+            for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
+                allCountryData.innerHTML +=
+                    `<tr>
+<th> ${data.data[i].name}</th>
+<th>${data.data[i].capital}</th>
+<th>${data.data[i].currency.code}</th>
+<th>${data.data[i].language.name}</th>
+</tr>`;
+            }
+        }).catch((error) => { console.log(error); })
+
+})
+
