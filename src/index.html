@@ -1,21 +1,81 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
     <title>Document</title>
 </head>
+
 <body>
-    <h1>
-        Hello World
-    </h1>
-    <img src="/assets/images/cat.jpeg" alt="" width="300">
+    <header class="center">
+        <h1>
+            My Country List
+        </h1>
+    </header>
+    <section class="searchSection">
+        <div class="titles">
+            <h2>Country Name</h2>
+            <h2>Capital City</h2>
+            <h2>Currency</h2>
+            <h2>Language</h2>
+        </div>
+        <label for="">
+            <div class="ui input titles">
+                <input class="countryinput" type="text" placeholder="Country">
+                <input  class="capitalinput" type="text" placeholder="Capital City">
+                <input  class="currencyinout" type="text" placeholder="Currency">
+                <input  class="languageinput" type="text" placeholder="Language">
+            </div>
+            <div >
+                <button class="searchButton ui secondary button">Search</button>
+                <button class="clearButton ui secondary button">Clear</button>
+            </div>
+        </label>
+    </section>
+    <section class="tableSection">
+    <table class="dataTable ui sortable celled table">
+        <thead>
+            <tr><th>Country Name</th>
+            <th>Capital City</th>
+            <th>Currency</th>
+            <th>Language</th>
+          </tr></thead>
+          <tbody class="tableBody">
+           
+        </tbody>
+        <tbody class="tableBody2">
 
+        </tbody>
+        <tbody class="tableBody3">
 
+        </tbody>
+    </table>
+    <div class="loadButtonDiv">
+    <button class="loadButton ui secondary button ">Load more</button>
+    </div>
+    <!-- <nav class="pagination-container"> -->
+        <!-- <button class="pagination-button" id="prev-button" title="Previous page" aria-label="Previous page">
+          &lt;
+        </button> -->
+<!--         
+        <div id="pagination-numbers">
+        </div> -->
+        
+        <!-- <button class="pagination-button" id="next-button" title="Next page" aria-label="Next page">
+          &gt;
+         </button> -->
+      <!-- </nav>
+       -->
+</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
     <script src="/scripts.js"></script>
 </body>
+
 </html>
