@@ -36,59 +36,6 @@
         "dialling_code": "+355",
         "isoCode": "008"
       },
-       {
-        "name": "Albania",
-        "code": "AL",
-        "capital": "Albania",
-        "region": "EU",
-        "currency": {
-          "code": "ALL",
-          "name": "Albanian lek",
-          "symbol": "L"
-        },
-        "language": {
-          "code": "sq",
-          "name": "Albanian"
-        },
-        "flag": "https://restcountries.eu/data/alb.svg",
-        "dialling_code": "+355",
-        "isoCode": "008"
-      },
-      {
-       "name": "Albania",
-       "code": "AL",
-       "capital": "Albania",
-       "region": "EU",
-       "currency": {
-         "code": "EUR",
-         "name": "Albanian lek",
-         "symbol": "L"
-       },
-       "language": {
-         "code": "sq",
-         "name": "Albanian"
-       },
-       "flag": "https://restcountries.eu/data/alb.svg",
-       "dialling_code": "+355",
-       "isoCode": "008"
-     },{
-        "name": "Albania",
-        "code": "AL",
-        "capital": "Albania",
-        "region": "EU",
-        "currency": {
-          "code": "EUR",
-          "name": "Albanian lek",
-          "symbol": "L"
-        },
-        "language": {
-          "code": "sq",
-          "name": "English"
-        },
-        "flag": "https://restcountries.eu/data/alb.svg",
-        "dialling_code": "+355",
-        "isoCode": "008"
-      },
       {
         "name": "Algeria",
         "code": "DZ",
