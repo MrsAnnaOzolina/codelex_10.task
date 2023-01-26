@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <header class="center">
+    <header class="headerMyList">
         <h1>
             My Country List
         </h1>
@@ -27,25 +27,25 @@
         </div>
         <label for="">
             <div class="ui input titles">
-                <input class="countryinput" type="text" placeholder="Country">
+                <input class="countryinput error" type="text" placeholder="Country">
                 <input class="capitalinput" type="text" placeholder="Capital City">
                 <input class="currencyinout" type="text" placeholder="Currency">
                 <input class="languageinput" type="text" placeholder="Language">
             </div>
-            <div>
-                <button class="searchButton ui secondary button">Search</button>
-                <button class="clearButton ui secondary button">Clear</button>
+            <div class="filterButtons">
+                <button class="searchButton ui secondary positive button">Search</button>
+                <button class="clearButton ui secondary positive button">Clear</button>
             </div>
         </label>
     </section>
     <section class="tableSection">
-        <table class="dataTable ui sortable celled table">
+        <table class="dataTable ui sortable celled green table">
             <thead>
                 <tr>
-                    <th scope="col">Country Name <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
-                    <th scope="col">Capital City <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
-                    <th scope="col">Currency <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
-                    <th scope="col"> Language<i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
+                    <th >Country Name <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
+                    <th >Capital City <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
+                    <th >Currency <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
+                    <th > Language<i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
                 </tr>
             </thead>
             <tbody class="tableBody">

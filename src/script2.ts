@@ -136,5 +136,3 @@
 //            // <th>${data.data[i].language.name}</th>
 // }
 // }
-
-} )

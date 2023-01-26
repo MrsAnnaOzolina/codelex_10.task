@@ -1,8 +1,10 @@
 body {
  // background-color: rgb(60, 55, 55);
 }
-header{
+.headerMyList{
 margin: 50px;
+display: flex !important;
+justify-content: center;
 }
 // header{
 //   display: flex;
@@ -58,6 +60,12 @@ h2{
 // 	display: block;
 // 	width: 100%;
 // }
+.arrowDown{
+  padding-left: 5px;
+}
 
-
-
+.filterButtons{
+  margin-top: 20px;
+  display: flex !important;
+  justify-content: center;
+}
