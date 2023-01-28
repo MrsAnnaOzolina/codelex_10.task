@@ -18,14 +18,15 @@
             My Country List
         </h1>
     </header>
-    <section class="searchSection">
+    <section class="js-searchSection">
+        <div class="ui container">
         <div class="titles">
             <h2>Country Name</h2>
             <h2>Capital City</h2>
             <h2>Currency</h2>
             <h2>Language</h2>
         </div>
-        <label for="">
+        <label>
             <div class="ui input titles">
                 <input class="countryinput error" type="text" placeholder="Country">
                 <input class="capitalinput" type="text" placeholder="Capital City">
@@ -33,47 +34,29 @@
                 <input class="languageinput" type="text" placeholder="Language">
             </div>
             <div class="filterButtons">
-                <button class="searchButton ui secondary positive button">Search</button>
+                <button class="searchButton ui secondary positive button" value="Submit">Search</button>
                 <button class="clearButton ui secondary positive button">Clear all filters</button>
             </div>
         </label>
-    </section>
-    <section class="tableSection">
+        </div>
+        <div class="ui container ">
         <table class="dataTable ui sortable celled green table">
             <thead>
                 <tr>
-                    <th >Country Name <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
-                    <th >Capital City <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
-                    <th >Currency <i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
-                    <th > Language<i class='fas fa-long-arrow-alt-down arrowDown'></i> <i class='fas fa-long-arrow-alt-up arrowUp'></i></th>
+                    <th >Country Name <i class='fas fa-long-arrow-alt-down arrowDown1'></i> <i class='fas fa-long-arrow-alt-up arrowUp1'></i></th>
+                    <th >Capital City <i class='fas fa-long-arrow-alt-down arrowDown2'></i> <i class='fas fa-long-arrow-alt-up arrowUp2'></i></th>
+                    <th >Currency <i class='fas fa-long-arrow-alt-down arrowDown3'></i> <i class='fas fa-long-arrow-alt-up arrowUp3'></i></th>
+                    <th > Language<i class='fas fa-long-arrow-alt-down arrowDown4'></i> <i class='fas fa-long-arrow-alt-up arrowUp4'></i></th>
                 </tr>
             </thead>
             <tbody class="tableBody">
 
             </tbody>
-            <tbody class="tableBody2">
-
-            </tbody>
-            <tbody class="tableBody3">
-
-            </tbody>
         </table>
+    </div>
         <div class="loadButtonDiv">
             <button class="loadButton ui secondary button ">Load more</button>
         </div>
-        <!-- <nav class="pagination-container"> -->
-        <!-- <button class="pagination-button" id="prev-button" title="Previous page" aria-label="Previous page">
-          &lt;
-        </button> -->
-        <!--         
-        <div id="pagination-numbers">
-        </div> -->
-
-        <!-- <button class="pagination-button" id="next-button" title="Next page" aria-label="Next page">
-          &gt;
-         </button> -->
-        <!-- </nav>
-       -->
     </section>
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>

@@ -1,49 +1,7 @@
 import axios from 'axios';
-//import { EvalSourceMapDevToolPlugin } from 'webpack';
+import { EvalSourceMapDevToolPlugin } from 'webpack';
 
-let loadMoreButton = document.querySelector<HTMLButtonElement>(".loadButton");
-let allCountryData = document.querySelector<HTMLTableElement>(".tableBody");
-let maxDataLoaded: number = 20;
-//let nextPage: number = 1; 
-let url = "http://localhost:3004/countries";
-let urlchanged: string = "";
-let firstElement: string = "?"
-let secondElement: string = "&"
-
-// input values
-const countryInput = document.querySelector<HTMLInputElement | null>(".countryinput");
-const capitalinput = document.querySelector<HTMLInputElement | null>(".capitalinput");
-const currencyinout = document.querySelector<HTMLInputElement>(".currencyinout");
-const languageinput = document.querySelector<HTMLInputElement>(".languageinput");
-const searchButton = document.querySelector<HTMLButtonElement | null>(".searchButton");
-const clearButton = document.querySelector(".clearButton");
-
-const sortButtonsDown = document.querySelectorAll(".arrowDown");
-const sortButtonsUp = document.querySelectorAll(".arrowUp");
-
-
-
-let filterSearchLink: string = "";
-let nameSortLinkDesc: string = "";
-let nameSortLinkAsc: string = "";
-let capitalSortLinkDesc: string = "";
-let capitalSortLinkAsc: string = "";
-let currencySortLinkDesc: string = "";
-let currencySortLinkAsc: string = "";
-let languageSortLinkDesc: string = "";
-let languageSortLinkAsc: string = "";
-
-let countryFilter: string | undefined = "";
-let capitalFilter: string | undefined = "";
-let currencyFilter: string | undefined = "";
-let languageFilter: string | undefined = "";
-
-let limit: string = "?_limit=";
-let firstlimit: string = "http://localhost:3004/countries?_limit="
-let firstLimitMid: string = "&_limit="
-let urlnew:string = "";
-
-type Countries = {
+type Allcountries = {
     name: string,
     code: string,
     capital: string,
@@ -62,344 +20,306 @@ type Countries = {
     isoCode: string
 }
 
-loadData(maxDataLoaded, url, limit);
+class Countries {
+    rootElement: HTMLElement;
+    searchButton: HTMLButtonElement;
+    clearButton: HTMLButtonElement;
+    loadMoreButton: HTMLButtonElement;
+    allCountryData: HTMLTableElement;
+    sortButtonsDown1: HTMLButtonElement;
+    sortButtonsDown2: HTMLButtonElement;
+    sortButtonsDown3: HTMLButtonElement;
+    sortButtonsDown4: HTMLButtonElement;
+    sortButtonsUp1: HTMLButtonElement;
+    sortButtonsUp2: HTMLButtonElement;
+    sortButtonsUp3: HTMLButtonElement;
+    sortButtonsUp4: HTMLButtonElement;
+    countryInput:HTMLInputElement;
+    capitalinput:HTMLInputElement;
+    currencyinout:HTMLInputElement;
+    languageinput:HTMLInputElement;
+    url: string;
+    maxloaded: number;
+    maxloadedDataEdit: number
+    limit: string;
+    element: any;
+    nameSortLinkDesc: string = "";
+    nameSortLinkAsc: string = "";
+    countryFilter: string | undefined = "";
+    capitalFilter: string | undefined = "";
+    currencyFilter: string | undefined = "";
+    languageFilter: string | undefined = "";
+    urlLength:number 
 
+    constructor(selector: any) {
+        this.rootElement = document.querySelector(selector);
+        this.allCountryData = this.rootElement.querySelector(".tableBody");
+        this.loadMoreButton = this.rootElement.querySelector(".loadButton");
+        this.searchButton = this.rootElement.querySelector(".searchButton");
+        this.clearButton = this.rootElement.querySelector(".clearButton");
+        this.sortButtonsDown1 = this.rootElement.querySelector(".arrowDown1");
+        this.sortButtonsDown2 = this.rootElement.querySelector(".arrowDown2");
+        this.sortButtonsDown3 = this.rootElement.querySelector(".arrowDown3");
+        this.sortButtonsDown4 = this.rootElement.querySelector(".arrowDown4");
+        this.sortButtonsUp1 = this.rootElement.querySelector(".arrowUp1");
+        this.sortButtonsUp2 = this.rootElement.querySelector(".arrowUp2");
+        this.sortButtonsUp3 = this.rootElement.querySelector(".arrowUp3");
+        this.sortButtonsUp4 = this.rootElement.querySelector(".arrowUp4");
+        this.countryInput = this.rootElement.querySelector(".countryinput");
+        this.capitalinput = this.rootElement.querySelector(".capitalinput");
+        this.currencyinout = this.rootElement.querySelector(".currencyinout");
+        this.languageinput = this.rootElement.querySelector(".languageinput");
+        this.url = "http://localhost:3004/countries";
+        this.maxloaded = 20;
+        this.maxloadedDataEdit = 20;
+        this.limit = "_limit=";
 
-// loadMoreData(maxDataLoaded);
-function loadData(maxDataLoaded: number, b: string, limitPart: string) {
-    //  limit = `${firstElement}_limit=${maxDataLoaded}`
-    axios.get<Countries[]>(`${b}${limitPart}${maxDataLoaded}`)
-        .then((data) => {
-            urlnew = `${b}${limitPart}${maxDataLoaded}`
-            data.data.forEach(i => {
-                allCountryData.innerHTML +=
-                    `<tr>
-                    <th> ${i.name}</th>
-                    <th>${i.capital}</th>
-                    <th>${i.currency.code}</th>
-                    <th>${i.language.name}</th>
-                    </tr>`;
-            });
-        }).then(() => {
-            loadMoreData(b, limitPart);
-            chooseInputValue(countryFilter, capitalFilter, currencyFilter);
-            onClickName(urlnew);
-        })
-        .catch((error) => { console.log(error); })
-}
-function loadMoreData(a: string, c: string) {
-     loadMoreButton.addEventListener("click", () => {
-        allCountryData.innerHTML = " ";
-        if (maxDataLoaded < 240) {
-            maxDataLoaded = maxDataLoaded + 20;
-          axios.get<Countries[]>(`${a}${c}${maxDataLoaded}`)
-                .then((data) => {
-                     console.log(`${a}${c}${maxDataLoaded}`);
-                    data.data.forEach(i => {
-                        allCountryData.innerHTML +=
-                            `<tr>
-                <th> ${i.name}</th>
-                <th>${i.capital}</th>
-                <th>${i.currency.code}</th>
-                <th>${i.language.name}</th>
-                </tr>`;
-                    });
-                })
-        }
-        else  {
-                loadMoreButton.style.display = 'none'
-                maxDataLoaded = maxDataLoaded + 20;
-                limit = `${"?"}_limit=${maxDataLoaded}`
-            axios.get<Countries[]>(`${a}${limit}`)
-            .then ((data)=>{
+        this.event(this.url)
+    }
+
+    event(f: string) {
+        axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloaded}`)
+            .then((data) => {
+                this.urlLength = data.data.length;
                 data.data.forEach(i => {
-                    allCountryData.innerHTML +=
+                    this.allCountryData.innerHTML +=
                         `<tr>
-                        <th> ${i.name}</th>
-                        <th>${i.capital}</th>
-                        <th>${i.currency.code}</th>
-                        <th>${i.language.name}</th>
-                        </tr>`;
+         <th> ${i.name}</th>
+         <th>${i.capital}</th>
+         <th>${i.currency.name}  (${i.currency.symbol})</th>
+         <th>${i.language.name}</th>
+         </tr>`;
                 });
             })
+        this.loadMoreButton.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            if (this.maxloadedDataEdit < 220 && this.maxloadedDataEdit < this.urlLength ) {
+
+                this.maxloadedDataEdit = this.maxloadedDataEdit + 20;
+                axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                    .then((data) => {
+                        this.urlLength = data.data.length;
+                        console.log(this.urlLength)
+                         //  console.log(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${this.nameSortLinkAsc}`);
+                        data.data.forEach(i => {
+                            this.allCountryData.innerHTML +=
+                                `<tr>
+               <th> ${i.name}</th>
+               <th>${i.capital}</th>
+               <th>${i.currency.name}  (${i.currency.symbol})</th>
+               <th>${i.language.name}</th>
+               </tr>`;
+                        });
+                    })
+            } else {
+                this.loadMoreButton.style.display = 'none'
+                this.maxloadedDataEdit = this.maxloadedDataEdit + 20;
+                axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                    .then((data) => {
+                        data.data.forEach(i => {
+                            this.allCountryData.innerHTML +=
+                                `<tr>
+                               <th> ${i.name}</th>
+                               <th>${i.capital}</th>
+                               <th>${i.currency.name}  (${i.currency.symbol})</th>
+                               <th>${i.language.name}</th>
+                               </tr>`;
+                        });
+                    })
             }
-    })
-}
-//filter function +sort 
-function chooseInputValue(countryFilter: string | undefined, capitalFilter: string | undefined, currencyFilter: string | undefined) {
-    searchButton.addEventListener("click", () => {
-        maxDataLoaded = 20;
-        allCountryData.innerHTML = " "
-        if (Number(countryInput.value) === 0 && Number(capitalinput.value) !== 0 && Number(currencyinout.value) === 0 && Number(languageinput.value) === 0) {
-            capitalFilter = `capital=${capitalinput.value}`
-            axios.get<Countries[]>(`${url}?${capitalFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${capitalFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
-                })
-        } else if (Number(countryInput.value) !== 0 && Number(capitalinput.value) === 0 && Number(currencyinout.value) === 0 && Number(languageinput.value) === 0) {
-            countryFilter = `name=${countryInput.value}`;
-            axios.get<Countries[]>(`${url}?${countryFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${countryFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
-                })
-        } else if (Number(currencyinout.value) !== 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) === 0 && Number(languageinput.value) === 0) {
-            currencyFilter = `currency.code=${currencyinout.value}`
-            axios.get<Countries[]>(`${url}?${currencyFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${currencyFilter}`;
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
-                }).then(() => {
-                    onClickName(urlchanged);
-                })
-        } else if (Number(languageinput.value) !== 0 && Number(currencyinout.value) === 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) === 0) {
-            languageFilter = `language.name=${languageinput.value}`
-            axios.get<Countries[]>(`${url}?${languageFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${languageFilter}`;
-                    onClickName(urlchanged);
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
-                })
-        } else if (Number(languageinput.value) !== 0 && Number(currencyinout.value) !== 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) === 0) {
-            languageFilter = `language.name=${languageinput.value}`
-            currencyFilter = `currency.code=${currencyinout.value}`
+        })
+        this.sortButtonsDown1.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkAsc = " ";
+            this.nameSortLinkDesc = `_sort=name&_order=desc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    console.log(this.nameSortLinkDesc)
 
-            axios.get<Countries[]>(`${url}?${languageFilter}&${currencyFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${languageFilter}&${currencyFilter}`;
-                    onClickName(urlchanged);
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
+                    });
                 })
-        } else if (Number(languageinput.value) !== 0 && Number(currencyinout.value) !== 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) !== 0) {
-            languageFilter = `language.name=${languageinput.value}`
-            currencyFilter = `currency.code=${currencyinout.value}`
-            capitalFilter = `capital=${capitalinput.value}`
-
-            axios.get<Countries[]>(`${url}?${languageFilter}&${currencyFilter}&${capitalFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${languageFilter}&${currencyFilter}&${capitalFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+        })
+        this.sortButtonsUp1.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkDesc = " ";
+            this.nameSortLinkAsc = `_sort=name&_order=asc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
+                    });
                 })
-        } else if (Number(languageinput.value) !== 0 && Number(currencyinout.value) !== 0 && Number(countryInput.value) !== 0 && Number(capitalinput.value) === 0) {
-            languageFilter = `language.name=${languageinput.value}`
-            currencyFilter = `currency.code=${currencyinout.value}`
-            countryFilter = `name=${countryInput.value}`
-
-            axios.get<Countries[]>(`${url}?${languageFilter}&${currencyFilter}&${countryFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${languageFilter}&${currencyFilter}&${countryFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+        })
+        this.sortButtonsDown2.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkAsc = " ";
+            this.nameSortLinkDesc = `_sort=capital&_order=desc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
+                    });
                 })
-        } else if (Number(languageinput.value) !== 0 && Number(currencyinout.value) === 0 && Number(countryInput.value) !== 0 && Number(capitalinput.value) === 0) {
-            languageFilter = `language.name=${languageinput.value}`
-            countryFilter = `name=${countryInput.value}`
+        })
+        this.sortButtonsUp2.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkDesc = " ";
+            this.nameSortLinkAsc = `_sort=capital&_order=asc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
 
-            axios.get<Countries[]>(`${url}?${languageFilter}&${countryFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${languageFilter}&${countryFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+                    });
                 })
-        } else if (Number(languageinput.value) !== 0 && Number(currencyinout.value) === 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) !== 0) {
-            languageFilter = `language.name=${languageinput.value}`
-            capitalFilter = `capital=${capitalinput.value}`
-
-            axios.get<Countries[]>(`${url}?${languageFilter}&${capitalFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${languageFilter}&${capitalFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+        })
+        this.sortButtonsDown3.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkAsc = " ";
+            this.nameSortLinkDesc = `_sort=currency.name&_order=desc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
+                    });
                 })
-        } else if (Number(languageinput.value) === 0 && Number(currencyinout.value) !== 0 && Number(countryInput.value) !== 0 && Number(capitalinput.value) === 0) {
-            currencyFilter = `currency.code=${currencyinout.value}`
-            countryFilter = `name=${countryInput.value}`
+        })
+        this.sortButtonsUp3.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkDesc = " ";
+            this.nameSortLinkAsc = `_sort=currency.name&_order=asc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
 
-            axios.get<Countries[]>(`${url}?${currencyFilter}&${countryFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${currencyFilter}&${countryFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+                    });
                 })
-        } else if (Number(languageinput.value) === 0 && Number(currencyinout.value) !== 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) !== 0) {
-            currencyFilter = `currency.code=${currencyinout.value}`
-            capitalFilter = `capital=${capitalinput.value}`
+        })
 
-            axios.get<Countries[]>(`${url}?${currencyFilter}&${capitalFilter}`)
-                .then((fileredData) => {
-                    urlchanged = `${url}?${currencyFilter}&${capitalFilter}`;
-                    onClickName(urlchanged);
-                }).then(() => {
-                    loadData(maxDataLoaded, urlchanged, firstLimitMid);
+        this.sortButtonsDown4.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkAsc = " ";
+            this.nameSortLinkDesc = `_sort=language.name&_order=desc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.urlLength = data.data.length;
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
+                    });
                 })
-        }
-          else if (Number(languageinput.value) === 0 && Number(currencyinout.value) === 0 && Number(countryInput.value) === 0 && Number(capitalinput.value) === 0 ){
-            alert("Please add  atleast one value to one of filter input fields!  ");
-            location.reload();
-        }
-    })
-}
+        })
+        this.sortButtonsUp4.addEventListener("click", () => {
+            this.allCountryData.innerHTML = " ";
+            this.nameSortLinkDesc = " ";
+            this.nameSortLinkAsc = `_sort=language.name&_order=asc`;
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    this.urlLength = data.data.length;
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                                <th> ${i.name}</th>
+                                <th>${i.capital}</th>
+                                <th>${i.currency.name}  (${i.currency.symbol})</th>
+                                <th>${i.language.name}</th>
+                                </tr>`;
 
-
-clearButton.addEventListener("click", () => {
-    countryInput.value = "";
-    capitalinput.value = "";
-    currencyinout.value = "";
-    languageinput.value = "";
-    location.reload();
+                    });
+                })
+        })
+        this.clearButton.addEventListener("click", () => {
+            this.allCountryData.innerHTML="";
+            this.maxloadedDataEdit = 20;
+            this.urlLength = 0;
+    this.countryInput.value = "";
+    this.capitalinput.value = "";
+    this.currencyinout.value = "";
+    this.languageinput.value = "";
+    axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloaded}`)
+                .then((data) => {
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                            <th> ${i.name}</th>
+                            <th>${i.capital}</th>
+                            <th>${i.currency.name}  (${i.currency.symbol})</th>
+                            <th>${i.language.name}</th>
+                            </tr>`;
+                    });
+                })
 
 })
-
-function onClickName(urlValue: string) {
-    sortButtonsDown[0].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        nameSortLinkDesc = `&_sort=name&_order=desc`
-        axios.get<Countries[]>(`${urlValue}${nameSortLinkDesc}`)
-            .then((data) => {
-                url = `${urlValue}${nameSortLinkDesc}`;
-                console.log(url)
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-<th> ${data.data[i].name}</th>
-<th>${data.data[i].capital}</th>
-<th>${data.data[i].currency.code}</th>
-<th>${data.data[i].language.name}</th>
-</tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsUp[0].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        nameSortLinkAsc = `&_sort=name&_order=asc`
-        //  url= "http://localhost:3004/countries";
-        axios.get<Countries[]>(`${urlValue}${nameSortLinkAsc}`)
-            .then((data) => {
-                url = `${urlValue}${nameSortLinkAsc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-<th> ${data.data[i].name}</th>
-<th>${data.data[i].capital}</th>
-<th>${data.data[i].currency.code}</th>
-<th>${data.data[i].language.name}</th>
-</tr>`;
-                }
-
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsDown[1].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        capitalSortLinkDesc = `&_sort=capital&_order=desc`
-        axios.get<Countries[]>(`${urlValue}${capitalSortLinkDesc}`)
-            .then((data) => {
-                url = `${urlValue}${capitalSortLinkDesc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-                    <th> ${data.data[i].name}</th>
-                    <th>${data.data[i].capital}</th>
-                    <th>${data.data[i].currency.code}</th>
-                    <th>${data.data[i].language.name}</th>
-                    </tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsUp[1].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        capitalSortLinkAsc = `&_sort=capital&_order=asc`
-        axios.get<Countries[]>(`${urlValue}${capitalSortLinkAsc}`)
-            .then((data) => {
-                url = `${urlValue}${capitalSortLinkAsc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-<th> ${data.data[i].name}</th>
-<th>${data.data[i].capital}</th>
-<th>${data.data[i].currency.code}</th>
-<th>${data.data[i].language.name}</th>
-</tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsDown[2].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        currencySortLinkDesc = `&_sort=currency.code&_order=desc`
-        axios.get<Countries[]>(`${urlValue}${currencySortLinkDesc}`)
-            .then((data) => {
-                url = `${urlValue}${currencySortLinkDesc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-<th> ${data.data[i].name}</th>
-<th>${data.data[i].capital}</th>
-<th>${data.data[i].currency.code}</th>
-<th>${data.data[i].language.name}</th>
-</tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsUp[2].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        currencySortLinkAsc = `&_sort=currency.code&_order=asc`
-        axios.get<Countries[]>(`${urlValue}${currencySortLinkAsc}`)
-            .then((data) => {
-                url = `${urlValue}${currencySortLinkAsc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-<th> ${data.data[i].name}</th>
-<th>${data.data[i].capital}</th>
-<th>${data.data[i].currency.code}</th>
-<th>${data.data[i].language.name}</th>
-</tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsDown[3].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        languageSortLinkDesc = `&_sort=language.name&_order=desc`
-        axios.get<Countries[]>(`${urlValue}${languageSortLinkDesc}`)
-            .then((data) => {
-                url = `${urlValue}${languageSortLinkDesc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-    <th> ${data.data[i].name}</th>
-    <th>${data.data[i].capital}</th>
-    <th>${data.data[i].currency.code}</th>
-    <th>${data.data[i].language.name}</th>
-    </tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-    sortButtonsUp[3].addEventListener("click", () => {
-        allCountryData.innerHTML = " "
-        languageSortLinkAsc = `&_sort=language.name&_order=asc`
-        axios.get<Countries[]>(`${urlValue}${languageSortLinkAsc}`)
-            .then((data) => {
-                url = `${urlValue}${languageSortLinkAsc}`
-                for (let i = maxDataLoaded - 20; i < maxDataLoaded; i++) {
-                    allCountryData.innerHTML +=
-                        `<tr>
-    <th> ${data.data[i].name}</th>
-    <th>${data.data[i].capital}</th>
-    <th>${data.data[i].currency.code}</th>
-    <th>${data.data[i].language.name}</th>
-    </tr>`;
-                }
-            }).catch((error) => { console.log(error); })
-    })
-
+    this.searchButton.addEventListener("click", () => {
+        this.allCountryData.innerHTML = " "
+            this.countryFilter = `name_like=${this.countryInput.value}`
+            this.capitalFilter = `capital_like=${this.capitalinput.value}`
+            this.currencyFilter = `currency.name_like=${this.currencyinout.value}`
+            this.languageFilter = `language.name_like=${this.languageinput.value}`
+            console.log(this.countryInput.value)
+            axios.get<Allcountries[]>(`${f}?${this.limit}${this.maxloadedDataEdit}&${this.nameSortLinkDesc}&${this.nameSortLinkAsc}&${ this.countryFilter }&${this.capitalFilter}&${this.currencyFilter}&${this.languageFilter }`)
+                .then((data) => {
+                    this.urlLength = data.data.length;
+                    data.data.forEach(i => {
+                        this.allCountryData.innerHTML +=
+                            `<tr>
+                            <th> ${i.name}</th>
+                            <th>${i.capital}</th>
+                            <th>${i.currency.name}  (${i.currency.symbol})</th>
+                            <th>${i.language.name}</th>
+                            </tr>`;
+                    });
+                })
+        })
+    }
 }
+
+const countries = new Countries('.js-searchSection');
+
+
+
+
